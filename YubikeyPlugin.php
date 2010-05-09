@@ -168,4 +168,3 @@ class YubikeyPlugin extends Plugin {
         return true;
     }
 }
-//LoginAction, if so insert yubikey? but how do i know if user has a key?

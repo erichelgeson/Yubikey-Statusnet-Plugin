@@ -10,13 +10,15 @@ Allow users who do not have yubikeys associated to also login (again this is jus
 A few architectural considerations for StatusNet are keeping me from proceeding (also my free time), so I'm sharing what I've done in hopes someone can contribute or offer ideas.
 
 Install:
-Put the folder Yubikey in your StatusNet plugins/ folder.
+Put this code in the folder named 'Yubikey' in your StatusNet plugins/ folder.
+
+Generate a new id+key from https://api.yubico.com/get-api-key/
 
 Add this to your config.php:
-addPlugin('Yubikey', array('api_key'   => 'example',
+addPlugin('Yubikey', array('api_key'   => 'xyzexample',
                            'client_id' => '1234'));
 
-Use a SQL query to add your identifier to the user_yubikey table. 
+Use a SQL query to add your Yubikey identifier (first 12 chars of your OTP) to the user_yubikey table. 
 INSERT INTO  `statusnet`.`user_yubikey` (
 `yubikey_id` ,
 `user_id` ,
