@@ -1,0 +1,77 @@
+diff --git a/actions/login.php b/actions/login.php
+index dc63523..a1654f4 100644
+--- a/actions/login.php
++++ b/actions/login.php
+@@ -127,6 +127,10 @@ class LoginAction extends Action
+             return;
+         }
+ 
++        if(!Event::handle('StartLoginAction', array($this, $user))) {
++            return;
++        }
++
+         // success!
+         if (!common_set_user($user)) {
+             $this->serverError(_('Error setting user. You are probably not authorized.'));
+@@ -223,21 +227,25 @@ class LoginAction extends Action
+                                           'id' => 'form_login',
+                                           'class' => 'form_settings',
+                                           'action' => common_local_url('login')));
+-        $this->elementStart('fieldset');
+-        $this->element('legend', null, _('Login to site'));
+-        $this->elementStart('ul', 'form_data');
+-        $this->elementStart('li');
+-        $this->input('nickname', _('Nickname'));
+-        $this->elementEnd('li');
+-        $this->elementStart('li');
+-        $this->password('password', _('Password'));
+-        $this->elementEnd('li');
+-        $this->elementStart('li');
+-        $this->checkbox('rememberme', _('Remember me'), false,
+-                        _('Automatically login in the future; ' .
+-                          'not for shared computers!'));
+-        $this->elementEnd('li');
+-        $this->elementEnd('ul');
++        if (Event::handle('StartLoginFormData', array($this))) {
++            $this->elementStart('fieldset');
++            $this->element('legend', null, _('Login to site'));
++            $this->elementStart('ul', 'form_data');
++            $this->elementStart('li');
++            $this->input('nickname', _('Nickname'));
++            $this->elementEnd('li');
++            $this->elementStart('li');
++            $this->password('password', _('Password'));
++            $this->elementEnd('li');
++	    Event::handle('EndLoginFormData', array($this));
++            $this->elementStart('li');
++            $this->checkbox('rememberme', _('Remember me'), false,
++                            _('Automatically login in the future; ' .
++                              'not for shared computers!'));
++            $this->elementEnd('li');
++            $this->elementEnd('ul');
++        }
++
+         $this->submit('submit', _('Login'));
+         $this->hidden('token', common_session_token());
+         $this->elementEnd('fieldset');
+diff --git a/actions/passwordsettings.php b/actions/passwordsettings.php
+index 3bb8e3b..057b39a 100644
+--- a/actions/passwordsettings.php
++++ b/actions/passwordsettings.php
+@@ -86,7 +86,7 @@ class PasswordsettingsAction extends AccountSettingsAction
+     function showContent()
+     {
+         $user = common_current_user();
+-
++        Event::handle('StartShowPasswordsettings', array($this));
+         $this->elementStart('form', array('method' => 'POST',
+                                           'id' => 'form_password',
+                                           'class' => 'form_settings',
+@@ -118,6 +118,7 @@ class PasswordsettingsAction extends AccountSettingsAction
+ 
+         $this->elementEnd('fieldset');
+         $this->elementEnd('form');
++        Event::handle('EndShowPasswordsettings', array($this));
+     }
+ 
+     /**

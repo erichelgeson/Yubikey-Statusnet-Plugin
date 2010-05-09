@@ -1,0 +1,30 @@
+Yubikey two factor auth plugin Version 1 Proof Of Concept
+
+This is a early Proof of Concept for two factor authentication plugin for StatusNet.
+
+Many things are left to do:
+GUI for adding Yubikey identifier (first 12 chars of the OTP)
+Work across all authentication methods?
+Allow users who do not have yubikeys associated to also login (again this is just a POC :)
+
+A few architectural considerations for StatusNet are keeping me from proceeding (also my free time), so I'm sharing what I've done in hopes someone can contribute or offer ideas.
+
+Install:
+Put the folder Yubikey in your StatusNet plugins/ folder.
+
+Add this to your config.php:
+addPlugin('Yubikey', array('api_key'   => 'example',
+                           'client_id' => '1234'));
+
+Use a SQL query to add your identifier to the user_yubikey table. 
+INSERT INTO  `statusnet`.`user_yubikey` (
+`yubikey_id` ,
+`user_id` ,
+`created` ,
+`modified`
+)
+VALUES (
+'2134534312',  '1', NOW() , NOW()
+);
+
+I've also had to include some extra plugin Events which are in the sn-new-events.patch (off of SN 0.9.2)
