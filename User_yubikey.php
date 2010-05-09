@@ -48,7 +48,7 @@ class User_yubikey extends Memcached_DataObject
 
     function keyTypes()
     {
-        return array('user_id' => 'P', 'yubikey_id' => 'K');
+        return array('user_id' => 'U', 'yubikey_id' => 'K');
     }
 
     /**
