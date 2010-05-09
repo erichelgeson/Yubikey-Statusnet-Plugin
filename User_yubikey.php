@@ -48,7 +48,7 @@ class User_yubikey extends Memcached_DataObject
 
     function keyTypes()
     {
-        return array('user_id' => 'K', 'yubikey_id' => 'K');
+        return array('user_id' => 'P', 'yubikey_id' => 'K');
     }
 
     /**
@@ -61,7 +61,6 @@ class User_yubikey extends Memcached_DataObject
 
     Static function verifyYubikeyID($user_id, $identity)
     {
-        
         $yubikeyobj = User_yubikey::staticGet('user_id', $user_id);
         return ($yubikeyobj->yubikey_id == $identity);
     }

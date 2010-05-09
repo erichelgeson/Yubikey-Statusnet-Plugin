@@ -50,7 +50,7 @@ class YubikeyPlugin extends Plugin {
     }
     
     function onEndShowPasswordsettings($action) {
-
+        //XXX Show association settings on this page?
     }
     
     function _checkYubikeyOTP($otp) {
@@ -90,15 +90,13 @@ class YubikeyPlugin extends Plugin {
         
         if (!User_yubikey::verifyYubikeyID($user->id, $identity)) {
             common_log(LOG_DEBUG, 'Yubikey:: User: '. $user->id.' does not have a Yubikey on record.');
-            //$action->showForm('You do not have a Yubikey associated with your account.');
-            // Return true because they dont care.
+            // Return true because they dont have a yubikey associated and can continue
             return true;
         }
 
         if ( $this->_checkYubikeyOTP($key) ) {
             return true;
         } else {
-            //XXX Client Error
             $action->showForm(_('Yubikey authentication failed.'));
             return false;
         }
@@ -131,10 +129,10 @@ class YubikeyPlugin extends Plugin {
     {
         $schema = Schema::get();
         $schema->ensureTable('user_yubikey',
-                             array(new ColumnDef('yubikey_id', 'varchar',
-                                                 '255', false, 'PRI'),
-                                   new ColumnDef('user_id', 'integer',
-                                                 null, false, 'MUL'),
+                             array(new ColumnDef('user_id', 'integer',
+                                                 null, false, 'PRI'),
+                                   new ColumnDef('yubikey_id', 'varchar',
+                                                 '12', false, 'MUL'),
                                    new ColumnDef('created', 'datetime',
                                                  null, false),
                                    new ColumnDef('modified', 'timestamp')));
